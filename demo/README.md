@@ -76,6 +76,8 @@ ip a
 # ctrl + ]
 ```
 
+Before beginning this section, create the helper pod: `k create -f helper.yaml`.
+
 ```bash
 #
 ### show pod/VM connectivity ###
@@ -131,4 +133,31 @@ virtctl stop fedora
 k delete vm fedora
 k delete dv fedora
 k delete svc fedora-http
+```
+
+## other
+
+```bash
+#
+### import a disk from http server ###
+#
+
+# create the DV, note you must have the image hosted somewhere
+k create -f http-dv.yaml
+
+# show the DV
+k get dv
+
+# show the import progress
+k logs importer-fedora-http-import
+```
+
+```bash
+#
+### create an all-in-one VM definition using a DataVolumeTemplate ###
+#
+
+# make sure the image is hosted somewhere accessible before creating the VM
+# this will create a VM named fedora-aio
+k create -f vm-fedora-dvt.yaml
 ```

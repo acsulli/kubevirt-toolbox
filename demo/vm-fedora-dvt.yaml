@@ -1,9 +1,9 @@
 apiVersion: kubevirt.io/v1alpha3
 kind: VirtualMachine
 metadata:
-  name: fedora
+  name: fedora-aio
   labels:
-    vm.kubevirt.io/name: fedora
+    vm.kubevirt.io/name: fedora-aio
 spec:
   dataVolumeTemplates:
     - apiVersion: cdi.kubevirt.io/v1alpha1
@@ -26,7 +26,7 @@ spec:
   template:
     metadata:
       labels:
-        vm.kubevirt.io/name: fedora
+        vm.kubevirt.io/name: fedora-aio
     spec:
       domain:
         cpu:
@@ -56,7 +56,7 @@ spec:
         resources:
           requests:
             memory: 1Gi
-      hostname: fedora
+      hostname: fedora-aio
       networks:
         - name: nic-0
           pod: {}
