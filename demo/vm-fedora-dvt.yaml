@@ -1,0 +1,73 @@
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: fedora
+  labels:
+    vm.kubevirt.io/name: fedora
+spec:
+  dataVolumeTemplates:
+    - apiVersion: cdi.kubevirt.io/v1alpha1
+      kind: DataVolume
+      metadata:
+        name: fedora-rootdisk
+      spec:
+        pvc:
+          accessModes:
+            - ReadWriteMany
+          resources:
+            requests:
+              storage: 10Gi
+          volumeMode: Filesystem
+        source:
+          http:
+            url: >-
+              http://10.0.101.39:8080/images/Fedora-Cloud-Base-32-1.6.x86_64.qcow2
+  running: false
+  template:
+    metadata:
+      labels:
+        vm.kubevirt.io/name: fedora
+    spec:
+      domain:
+        cpu:
+          cores: 1
+          sockets: 1
+          threads: 1
+        devices:
+          disks:
+            - bootOrder: 1
+              disk:
+                bus: virtio
+              name: rootdisk
+            - disk:
+                bus: virtio
+              name: cloudinitdisk
+          inputs:
+            - bus: virtio
+              name: tablet
+              type: tablet
+          interfaces:
+            - masquerade: {}
+              model: virtio
+              name: nic-0
+          networkInterfaceMultiqueue: true
+        machine:
+          type: pc-q35-rhel8.2.0
+        resources:
+          requests:
+            memory: 1Gi
+      hostname: fedora
+      networks:
+        - name: nic-0
+          pod: {}
+      terminationGracePeriodSeconds: 180
+      volumes:
+        - dataVolume:
+            name: fedora-rootdisk
+          name: rootdisk
+        - cloudInitNoCloud:
+            userData: |-
+              #cloud-config
+              password: redhat
+              chpasswd: { expire: False }
+          name: cloudinitdisk

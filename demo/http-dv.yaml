@@ -1,0 +1,14 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: fedora-http-import
+spec:
+  source:
+      http:
+         url: http://10.0.101.39:8080/images/Fedora-Cloud-Base-32-1.6.x86_64.qcow2
+  pvc:
+    accessModes:
+      - ReadWriteMany
+    resources:
+      requests:
+        storage: 10Gi
